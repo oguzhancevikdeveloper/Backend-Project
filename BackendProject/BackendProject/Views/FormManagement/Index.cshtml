@@ -1,0 +1,170 @@
+﻿@model List<Form>
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<!-- Arama Formu -->
+<form method="get" action="/FormManagement" style="margin-bottom: 20px;">
+    <input type="text" name="searchTerm" placeholder="Form ismine göre ara" class="form-control" />
+    <button type="submit" class="btn btn-primary">Ara</button>
+</form>
+
+<!-- Form Listesi -->
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Form Adı</th>
+            <th>Açıklama</th>
+            <th>Oluşturulma Tarihi</th>
+            <th>Oluşturan</th>
+            <th>İşlemler</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var form in Model)
+        {
+            <tr>
+                <td>@form.Name</td>
+                <td>@form.Description</td>
+                <td>@form.CreatedAt</td>
+                <td>@form.CreatedBy</td>
+                <td>
+                    <a href="@Url.Action("Details", "FormManagement", new { id = form.Id })" class="btn btn-info btn-sm">Görüntüle</a>
+
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<!-- Yeni Form Oluştur Butonu -->
+<button onclick="openFormPopup()" class="btn btn-success">Yeni Form Oluştur</button>
+
+<!-- Yeni Form Popup -->
+<div id="formPopup" class="popup" style="display: none;">
+    <div class="popup-content">
+        <span class="close" onclick="closeFormPopup()">&times;</span>
+        <h3>Yeni Form Oluştur</h3>
+        <form id="createForm" method="post" action="/FormManagement/Create">
+            <div class="form-group">
+                <label for="Name">Form Adı</label>
+                <input type="text" name="Name" id="Name" class="form-control" required />
+            </div>
+
+            <div class="form-group">
+                <label for="Description">Açıklama</label>
+                <input type="text" name="Description" id="Description" class="form-control" />
+            </div>
+
+            <div class="form-group">
+                <label>Alanlar</label>
+                <div id="fieldsContainer">
+                    <!-- Dinamik alanlar buraya eklenecek -->
+                </div>
+                <button type="button" class="btn btn-secondary" onclick="addField()">Alan Ekle</button>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Kaydet</button>
+        </form>
+    </div>
+</div>
+
+<!-- Popup Stil -->
+<style>
+    .popup {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .popup-content {
+        background-color: white;
+        padding: 20px;
+        border-radius: 8px;
+        width: 500px;
+        max-width: 100%;
+    }
+
+    .close {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        font-size: 30px;
+        font-weight: bold;
+        cursor: pointer;
+    }
+
+    .popup .form-group {
+        margin-bottom: 15px;
+    }
+</style>
+
+<script>
+    // Form popup'ını açma
+    function openFormPopup() {
+        document.getElementById("formPopup").style.display = "flex";
+    }
+
+    // Form popup'ını kapama
+    function closeFormPopup() {
+        document.getElementById("formPopup").style.display = "none";
+    }
+
+    // Dinamik alan ekleme
+    function addField() {
+        const container = document.getElementById("fieldsContainer");
+        const field = document.createElement("div");
+        field.classList.add("form-group");
+        field.innerHTML = `
+                    <div>
+                        <label>Alan Adı</label>
+                        <input type="text" name="Fields[][Name]" class="form-control" required />
+                    </div>
+                    <div>
+                        <label>Veri Tipi</label>
+                        <select name="Fields[][DataType]" class="form-control">
+                            <option value="STRING">STRING</option>
+                            <option value="NUMBER">NUMBER</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label>Zorunlu</label>
+                        <input type="checkbox" name="Fields[][Required]" />
+                    </div>
+                `;
+        container.appendChild(field);
+    }
+
+    // Form gönderildiğinde, alanları JSON formatında controller'a göndermek için serialize edilmesi
+    document.getElementById("createForm").addEventListener("submit", function (event) {
+        let fields = [];
+        const fieldElements = document.querySelectorAll("input[name='Fields[][Name]']");
+        for (let i = 0; i < fieldElements.length; i++) {
+            const name = fieldElements[i].value;
+            const dataType = document.querySelectorAll("select[name='Fields[][DataType]']")[i].value;
+            const required = document.querySelectorAll("input[name='Fields[][Required]']")[i].checked;
+
+            fields.push({
+                Name: name,
+                DataType: dataType,
+                Required: required
+            });
+        }
+
+        // Hidden field ile JSON verisini gönderme
+        const fieldsJson = document.createElement("input");
+        fieldsJson.type = "hidden";
+        fieldsJson.name = "FieldsJson";
+        fieldsJson.value = JSON.stringify(fields);
+        this.appendChild(fieldsJson);
+    });
+</script> 
