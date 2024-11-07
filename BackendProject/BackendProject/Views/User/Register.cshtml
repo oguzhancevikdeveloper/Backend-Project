@@ -1,0 +1,25 @@
+﻿@model BackendProject.Models.User
+@{
+    ViewData["Title"] = "Register";
+}
+
+<h2>Kayıt Ol</h2>
+<form asp-action="Register" method="post">
+    <div>
+        <label>İsim:</label>
+        <input asp-for="Name" />
+        <span asp-validation-for="Name"></span>
+    </div>
+    <div>
+        <label>E-posta:</label>
+        <input asp-for="Email" />
+        <span asp-validation-for="Email"></span>
+    </div>
+    <div>
+        <label>Şifre:</label>
+        <input asp-for="Password" type="password" />
+        <span asp-validation-for="Password"></span>
+    </div>
+    <button type="submit">Kayıt Ol</button>
+</form>
+
