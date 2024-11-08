@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace BackendProject.Models;
+namespace BackendProject.Models.User;
 
 public class User
 {

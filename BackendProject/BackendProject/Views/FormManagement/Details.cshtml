@@ -6,20 +6,27 @@
 
 <h2>@Model.Name</h2>
 <p>@Model.Description</p>
+<p><strong>Oluşturulma Tarihi:</strong> @Model.CreatedAt</p> 
 
-<form>
+<form method="post" action="/FormManagement/Create">
     @foreach (var field in Model.Fields)
     {
-        <label>@field.Name</label>
-        @if (field.DataType == "STRING")
-        {
-            <input type="text" required="@field.Required" />
-        }
-        else if (field.DataType == "NUMBER")
-        {
-            <input type="number" required="@field.Required" />
-        }
-        <br />
+        <div class="form-group">
+            <label>@field.Name @if (field.Required)
+                {
+                    <span style="color: red;">*</span>
+                }</label>
+            @if (field.DataType == "STRING")
+            {
+                <input type="text" class="form-control" name="Fields[@field.Id].Value" required="@field.Required" />
+            }
+            else if (field.DataType == "NUMBER")
+            {
+                <input type="number" class="form-control" name="Fields[@field.Id].Value" required="@field.Required" />
+            }
+            <br />
+        </div>
     }
+@*     <button type="submit" class="btn btn-primary">Kaydet</button> *@
 </form>
 

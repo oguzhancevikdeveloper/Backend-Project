@@ -1,4 +1,5 @@
-﻿using BackendProject.Models;
+﻿using BackendProject.Models.Form;
+using BackendProject.Models.User;
 using Microsoft.EntityFrameworkCore;
 
 namespace BackendProject.Data;

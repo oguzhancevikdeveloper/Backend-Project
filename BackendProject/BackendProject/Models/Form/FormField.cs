@@ -1,4 +1,4 @@
-﻿namespace BackendProject.Models;
+﻿namespace BackendProject.Models.Form;
 
 public class FormField
 {

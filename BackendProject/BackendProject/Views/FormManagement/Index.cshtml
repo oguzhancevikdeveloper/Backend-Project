@@ -1,4 +1,4 @@
-﻿@model List<Form>
+﻿@model List<BackendProject.Models.Form.Form>
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -7,7 +7,7 @@
 <h2>@ViewData["Title"]</h2>
 
 <!-- Arama Formu -->
-<form method="get" action="/FormManagement" style="margin-bottom: 20px;">
+<form method="get" action="/FormManagement/Index" style="margin-bottom: 20px;">
     <input type="text" name="searchTerm" placeholder="Form ismine göre ara" class="form-control" />
     <button type="submit" class="btn btn-primary">Ara</button>
 </form>
@@ -40,10 +40,8 @@
     </tbody>
 </table>
 
-<!-- Yeni Form Oluştur Butonu -->
 <button onclick="openFormPopup()" class="btn btn-success">Yeni Form Oluştur</button>
 
-<!-- Yeni Form Popup -->
 <div id="formPopup" class="popup" style="display: none;">
     <div class="popup-content">
         <span class="close" onclick="closeFormPopup()">&times;</span>
@@ -72,7 +70,7 @@
     </div>
 </div>
 
-<!-- Popup Stil -->
+
 <style>
     .popup {
         position: fixed;
@@ -109,17 +107,15 @@
 </style>
 
 <script>
-    // Form popup'ını açma
+    
     function openFormPopup() {
         document.getElementById("formPopup").style.display = "flex";
     }
-
-    // Form popup'ını kapama
+ 
     function closeFormPopup() {
         document.getElementById("formPopup").style.display = "none";
     }
-
-    // Dinamik alan ekleme
+  
     function addField() {
         const container = document.getElementById("fieldsContainer");
         const field = document.createElement("div");
@@ -144,7 +140,6 @@
         container.appendChild(field);
     }
 
-    // Form gönderildiğinde, alanları JSON formatında controller'a göndermek için serialize edilmesi
     document.getElementById("createForm").addEventListener("submit", function (event) {
         let fields = [];
         const fieldElements = document.querySelectorAll("input[name='Fields[][Name]']");
@@ -158,9 +153,7 @@
                 DataType: dataType,
                 Required: required
             });
-        }
-
-        // Hidden field ile JSON verisini gönderme
+        }      
         const fieldsJson = document.createElement("input");
         fieldsJson.type = "hidden";
         fieldsJson.name = "FieldsJson";

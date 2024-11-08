@@ -1,4 +1,6 @@
-﻿namespace BackendProject.Models;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace BackendProject.Models.Form;
 
 public class Form
 {
@@ -8,4 +10,7 @@ public class Form
     public string CreatedAt { get; set; }
     public int CreatedBy { get; set; }
     public List<FormField> Fields { get; set; }
+
+    [NotMapped]
+    public string FieldsJson { get; set; }
 }
